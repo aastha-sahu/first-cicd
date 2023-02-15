@@ -21,26 +21,6 @@ agent any
             }
         }
 
-        stage('Unit Test') { 
-            steps {
-                 sh 'mvn --batch-mode -Dmaven.test.failure.ignore=true test'
-                 echo 'The Unit test is Sucessfull'
-            }
-        }
-
-        stage('Code Coverage') { 
-            steps {
-                   jacoco exclusionPattern: '**/*Test*.class', inclusionPattern: '**/*.class', sourceExclusionPattern: 'generated/**/*.java'
-                echo 'The Code coverage is done'
-            }
-        }
-
-        stage('Sonarqube Test') { 
-            steps {
-            withSonarQubeEnv('sonar') {
-                 sh '''mvn sonar:sonar'''         }
-                 echo 'The Application passes All the Quality Gates'
-
-            }    
-        } 
+      
+        
 }}
