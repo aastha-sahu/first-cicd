@@ -1,0 +1,45 @@
+pipeline {
+agent any
+
+    tools{ 
+  maven 'mavenone'
+    }
+
+    stages {
+
+        stage('Checkout') { 
+            steps {
+                 git 'https://github.com/Mrunal-12345/studentapp-ui.git'
+                 echo 'The code is pulled Sucessfully'
+            }
+        }
+
+        stage('Build Code') { 
+            steps {
+                 sh 'mvn clean package'
+                 echo 'The Source Code is Build Sucessfully'
+            }
+        }
+
+        stage('Unit Test') { 
+            steps {
+                 sh 'mvn --batch-mode -Dmaven.test.failure.ignore=true test'
+                 echo 'The Unit test is Sucessfull'
+            }
+        }
+
+        stage('Code Coverage') { 
+            steps {
+                   jacoco exclusionPattern: '**/*Test*.class', inclusionPattern: '**/*.class', sourceExclusionPattern: 'generated/**/*.java'
+                echo 'The Code coverage is done'
+            }
+        }
+
+        stage('Sonarqube Test') { 
+            steps {
+            withSonarQubeEnv('sonar') {
+                 sh '''mvn sonar:sonar'''         }
+                 echo 'The Application passes All the Quality Gates'
+
+            }    
+        } 
